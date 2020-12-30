@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import compression from "compression";
 import morgan from "morgan";
 import config from "./config";
+import { startConnection } from "./database";
 
 const app: Express = express();
 
@@ -23,6 +24,11 @@ app.get("/api", (req: Request, res: Response) => {
   }
 });
 
-app.listen(app.get("port"));
-console.log(`Server on port ${app.get("port")} 🌎`);
-console.log(config);
+const main = async (): Promise<void> => {
+  await startConnection();
+
+  app.listen(app.get("port"));
+  console.log(`Server on port ${app.get("port")} 🌎`);
+};
+
+main();
