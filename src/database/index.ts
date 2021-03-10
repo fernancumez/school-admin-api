@@ -10,7 +10,7 @@ const startConnection = async (): Promise<void> => {
       useUnifiedTopology: true,
     };
 
-    await connect(config.DATABASE_URL, connectOption);
+    await connect(config.DATABASE_URI, connectOption);
     console.log("Database is connected!");
     console.log(`Database name: ${connection.name}`);
   } catch (error) {
