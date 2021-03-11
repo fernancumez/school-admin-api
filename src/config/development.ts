@@ -1,26 +1,14 @@
 import dotenv from "dotenv";
+import { IDatabaseConfig } from "../types/config.types";
 const { NODE_ENV } = process.env;
 
 if (NODE_ENV !== "production") dotenv.config();
 
-const devConfig: IDevconfig = {
-  PORT: process.env.PORT || "4000",
-  NODE_ENV: process.env.NODE_ENV || "development",
-  CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:3000",
-  DATABASE_URL:
-    process.env.DATABASE_URL ||
-    `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.oxbda.mongodb.net/school-db-${NODE_ENV}?retryWrites=true&w=majority`,
-  USER: process.env.USER || "fernando",
-  PASSWORD: process.env.PASSWORD || "fernando",
+const devConfig: IDatabaseConfig = {
+  PORT: `${process.env.PORT}`,
+  NODE_ENV: `${process.env.NODE_ENV}`,
+  DATABASE_URI: `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.oxbda.mongodb.net/${process.env.DATABASE_NAME}-${process.env.NODE_ENV}?retryWrites=true&w=majority`,
+  JWT_KEY: `${process.env.JWT_KEY}`,
 };
-
-interface IDevconfig {
-  PORT: string;
-  NODE_ENV: string;
-  CORS_ORIGIN: string;
-  DATABASE_URL: string;
-  USER: string;
-  PASSWORD: string;
-}
 
 export default devConfig;

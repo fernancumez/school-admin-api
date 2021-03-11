@@ -1,28 +1,30 @@
-import express, { Express, Request, Response } from "express";
+import express, { Application } from "express";
 import compression from "compression";
-import morgan from "morgan";
+import passport from "passport";
 import config from "./config";
-import { startConnection } from "./database";
+import morgan from "morgan";
 
-const app: Express = express();
+import { startConnection } from "./database";
+import authRoutes from "./routes/auth.routes";
+import welcomeRoutes from "./routes/welcome.routes";
+import passportMiddleware from "./middlewares/passport";
+
+const app: Application = express();
 
 // Settings
 app.set("port", parseInt(config.PORT));
 
 // Middlewares
-app.use(compression());
 app.use(morgan("dev"));
+app.use(compression());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+passport.use(passportMiddleware);
+app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.get("/api", (req: Request, res: Response) => {
-  try {
-    res.status(200).json({ message: "Hello world" });
-  } catch (error) {
-    res.status(400).json(error);
-  }
-});
+app.use(welcomeRoutes);
+app.use("/api", authRoutes);
 
 const main = async (): Promise<void> => {
   await startConnection();
